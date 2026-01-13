@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
   <meta charset="UTF-8" />
-  <title>AI-assisted X-ray Interpretation</title>
+  <title>Sun’iy intellekt yordamida X-ray talqini</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -13,13 +13,13 @@
     <div class="flex items-center gap-3">
       <div class="w-9 h-9 rounded-md bg-gradient-to-br from-cyan-400 to-blue-600"></div>
       <span class="text-lg font-semibold tracking-wide">
-        AI X-ray Interpretation System
+        X-ray tasvirlarini AI yordamida tahlil qilish tizimi
       </span>
     </div>
 
     <button onclick="openXray()"
       class="px-5 py-2 rounded-md bg-cyan-500/90 hover:bg-cyan-400 text-slate-900 text-sm font-medium transition">
-      X-ray Analysis
+      X-ray tahlili
     </button>
   </div>
 </header>
@@ -30,53 +30,55 @@
   <!-- HOME -->
   <section id="home">
     <h1 class="text-4xl font-semibold leading-tight mb-4">
-      AI-assisted interpretation of radiographic images
+      Radiografik tasvirlarni sun’iy intellekt yordamida talqin qilish
     </h1>
 
     <p class="text-slate-400 max-w-3xl mb-12">
-      This platform demonstrates the use of artificial intelligence to assist
-      in the interpretation of X-ray images. The system provides descriptive
-      findings based on visual patterns commonly associated with radiological conditions.
+      Ushbu platforma X-ray tasvirlarini tahlil qilishda sun’iy intellektdan
+      yordamchi vosita sifatida foydalanishni namoyish etadi.
+      Tizim radiologik kasalliklarga xos bo‘lgan vizual belgilar asosida
+      tavsifiy xulosalar taqdim etadi.
     </p>
 
     <div class="grid md:grid-cols-3 gap-8">
 
       <div class="bg-[#020617] border border-slate-800 rounded-xl p-6">
-        <h3 class="text-lg font-medium mb-2">Pulmonary Pneumonia</h3>
+        <h3 class="text-lg font-medium mb-2">O‘pka pnevmoniyasi</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Increased radiopacity and focal infiltrates observed within lung fields,
-          commonly associated with inflammatory processes.
+          O‘pka maydonlarida radiologik zichlikning oshishi va yallig‘lanish
+          jarayonlariga xos infiltrativ soyalar kuzatiladi.
         </p>
       </div>
 
       <div class="bg-[#020617] border border-slate-800 rounded-xl p-6">
-        <h3 class="text-lg font-medium mb-2">Pulmonary Tuberculosis</h3>
+        <h3 class="text-lg font-medium mb-2">O‘pka sil kasalligi (tuberkulyoz)</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Presence of cavitary lesions, fibrotic changes, and nodular opacities
-          predominantly in upper lung zones.
+          Asosan o‘pkaning yuqori qismlarida kavernalar, fibroz o‘zgarishlar
+          va tugunli zichlashuvlar aniqlanadi.
         </p>
       </div>
 
       <div class="bg-[#020617] border border-slate-800 rounded-xl p-6">
-        <h3 class="text-lg font-medium mb-2">Skeletal Fractures</h3>
+        <h3 class="text-lg font-medium mb-2">Suyak sinishlari</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Disruption of cortical bone continuity, including complete fractures
-          or micro-fracture patterns.
+          Suyak kortikal qatlamining uzilishi, to‘liq yoki qisman sinishlar,
+          shuningdek mikro-yoriqlar kuzatiladi.
         </p>
       </div>
 
       <div class="bg-[#020617] border border-slate-800 rounded-xl p-6">
-        <h3 class="text-lg font-medium mb-2">Pulmonary Edema</h3>
+        <h3 class="text-lg font-medium mb-2">O‘pka shishi</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Diffuse bilateral opacities indicative of interstitial or alveolar fluid
-          accumulation.
+          O‘pka to‘qimalarida suyuqlik to‘planishiga xos bo‘lgan ikki tomonlama
+          diffuz soyalar aniqlanadi.
         </p>
       </div>
 
       <div class="bg-[#020617] border border-slate-800 rounded-xl p-6">
-        <h3 class="text-lg font-medium mb-2">Cardiomegaly</h3>
+        <h3 class="text-lg font-medium mb-2">Yurak kattalashuvi (kardiomegaliya)</h3>
         <p class="text-sm text-slate-400 leading-relaxed">
-          Enlargement of cardiac silhouette exceeding normal cardiothoracic ratio.
+          Yurak soyasining normal kardiotorakal nisbatdan oshib ketishi
+          bilan tavsiflanadi.
         </p>
       </div>
 
@@ -85,18 +87,19 @@
 
   <!-- XRAY -->
   <section id="xray" class="hidden max-w-2xl mx-auto">
-<!-- HEADER -->
+
 <button onclick="goBack()"
   class="mb-6 text-sm text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2">
-  ← Back to overview
+  ← Umumiy ko‘rinishga qaytish
 </button>
 
     <h2 class="text-3xl font-semibold mb-3">
-      Radiographic Image Analysis
+      Radiografik tasvirni tahlil qilish
     </h2>
 
     <p class="text-slate-400 mb-8">
-      Upload an X-ray image to receive an AI-generated descriptive interpretation.
+      X-ray tasvirini yuklang va sun’iy intellekt tomonidan yaratilgan
+      tavsifiy xulosani oling.
     </p>
 
     <div class="bg-[#020617] border border-slate-800 rounded-xl p-8">
@@ -111,18 +114,19 @@
       <button
         class="w-full py-2 rounded-md bg-cyan-500/90 hover:bg-cyan-400
         text-slate-900 font-medium transition">
-        Generate AI Interpretation
+        AI xulosasini yaratish
       </button>
 
       <div class="mt-6 border border-slate-800 rounded-md p-5 bg-[#0b0f1a]">
         <p class="text-sm text-slate-400 leading-relaxed">
-          AI-generated findings will be displayed here. This output is intended
-          to assist radiological review and does not replace professional diagnosis.
+          Sun’iy intellekt tomonidan shakllantirilgan natijalar shu yerda
+          ko‘rsatiladi. Ushbu xulosa faqat yordamchi maqsadga ega bo‘lib,
+          shifokor tashxisini almashtirmaydi.
         </p>
       </div>
 
       <p class="text-xs text-slate-500 mt-4">
-        Disclaimer: This system is for academic and demonstrational purposes only.
+        Eslatma: Ushbu tizim faqat ilmiy va namoyish (demo) maqsadlarida ishlab chiqilgan.
       </p>
     </div>
   </section>
@@ -134,16 +138,11 @@ function openXray() {
   document.getElementById("home").classList.add("hidden");
   document.getElementById("xray").classList.remove("hidden");
 }
-function openXray() {
-  document.getElementById("home").classList.add("hidden");
-  document.getElementById("xray").classList.remove("hidden");
-}
 
 function goBack() {
   document.getElementById("xray").classList.add("hidden");
   document.getElementById("home").classList.remove("hidden");
 }
-
 </script>
 
 </body>
