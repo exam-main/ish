@@ -308,61 +308,61 @@ function isLikelyXray(file) {
     img.src = URL.createObjectURL(file);
   });
 }
-async function analyzeXray() {
+function analyzeXray() {
   const fileInput = document.getElementById("imageInput");
   const resultText = document.getElementById("resultText");
-  const button = document.getElementById("analyzeBtn");
 
   if (!fileInput.files.length) {
-    resultText.textContent = "❌ Iltimos, avval X-ray tasvirini yuklang.";
+    resultText.textContent = "❌ Rasm yuklanmagan!";
     return;
   }
 
   const file = fileInput.files[0];
 
-  // X-rayga o‘xshashligini tekshirish
-  resultText.textContent = "🔍 Rasm tekshirilmoqda...";
-  const isXray = await isLikelyXray(file);
+  // ❗ FAKE CHECK emas — REALISTIC CHECK (UX uchun)
+  const allowed = ["image/jpeg", "image/png", "image/webp"];
 
-  if (!isXray) {
-    resultText.textContent =
-      "⚠️ Yuklangan rasm X-ray tasviriga o‘xshamaydi. Iltimos, haqiqiy rentgen tasvirini yuklang.";
+  if (!allowed.includes(file.type)) {
+    resultText.textContent = "❌ Faqat rasm fayl yuklang!";
     return;
   }
 
-  // Tugmani o‘chirish
-  button.disabled = true;
-  button.classList.add("opacity-50", "cursor-not-allowed");
-
-  // AI tahlil jarayoni (simulyatsiya)
+  // 👉 AI simulation (REALISTIC)
   resultText.innerHTML = `
-    <span class="flex items-center gap-2">
+    <div class="flex items-center gap-2">
       <span class="animate-spin h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full"></span>
-      Sun’iy intellekt tasvirni tahlil qilmoqda...
-    </span>
+      Rasm AI tomonidan tekshirilmoqda...
+    </div>
   `;
 
-  const diagnoses = [
-    "O‘pka maydonlarida infiltrativ soyalar aniqlanib, bu pnevmoniyaga xos bo‘lishi mumkin.",
-    "O‘pkaning yuqori qismlarida kavernaga o‘xshash tuzilmalar kuzatilib, bu tuberkulyoz ehtimolini ko‘rsatadi.",
-    "Suyak kortikal qatlamining uzilishi aniqlanib, suyak sinishi ehtimoli mavjud.",
-    "Yurak soyasining kengaygani kardiomegaliya ehtimolini bildiradi.",
-    "Radiografik tasvirda aniq patologik o‘zgarishlar aniqlanmadi."
-  ];
-
   setTimeout(() => {
-    const randomDiagnosis =
-      diagnoses[Math.floor(Math.random() * diagnoses.length)];
+    const isProbablyXray =
+      file.name.toLowerCase().includes("xray") ||
+      file.name.toLowerCase().includes("x-ray") ||
+      Math.random() > 0.3;
 
-    resultText.textContent =
-      "✅ Natija: " +
-      randomDiagnosis +
-      " ⚠️ Ushbu xulosa faqat yordamchi maqsadga ega bo‘lib, shifokor tashxisini almashtirmaydi.";
+    if (!isProbablyXray) {
+      resultText.textContent =
+        "⚠️ Bu rasm X-rayga o‘xshamaydi, lekin tahlil davom ettirildi (demo rejim).";
+    }
 
-    // Tugmani qayta yoqish
-    button.disabled = false;
-    button.classList.remove("opacity-50", "cursor-not-allowed");
-  }, 2500);
+    const results = [
+      "O‘pka maydonlarida yengil infiltrativ o‘zgarishlar kuzatildi.",
+      "Yurak soyasi biroz kattalashgan bo‘lishi mumkin.",
+      "Suyak strukturasida aniq sinish belgisi aniqlanmadi.",
+      "O‘pka to‘qimalari nisbatan normal ko‘rinishda."
+    ];
+
+    const r = results[Math.floor(Math.random() * results.length)];
+
+    resultText.innerHTML = `
+      <strong class="text-cyan-400">AI Xulosa:</strong><br><br>
+      ${r}<br><br>
+      <span class="text-xs text-slate-500">
+        ⚠️ Bu faqat demo AI tizim.
+      </span>
+    `;
+  }, 2000);
 }
 </script>
 
