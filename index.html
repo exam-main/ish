@@ -273,6 +273,97 @@ function analyzeXray() {
     button.classList.remove("opacity-50", "cursor-not-allowed");
   }, 2500);
 }
+function isLikelyXray(file) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    img.onload = function () {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+      let colorDifference = 0;
+      let sampleCount = 0;
+
+      // Har 20-pikseldan birini tekshiramiz (tezroq ishlashi uchun)
+      for (let i = 0; i < imageData.length; i += 80) {
+        const r = imageData[i];
+        const g = imageData[i + 1];
+        const b = imageData[i + 2];
+
+        colorDifference += Math.abs(r - g) + Math.abs(r - b) + Math.abs(g - b);
+        sampleCount++;
+      }
+
+      const avgDifference = colorDifference / sampleCount;
+
+      // Agar ranglar orasidagi farq kichik bo‘lsa, rasm oq-qora deb hisoblanadi
+      resolve(avgDifference < 15);
+    };
+
+    img.src = URL.createObjectURL(file);
+  });
+}
+async function analyzeXray() {
+  const fileInput = document.getElementById("imageInput");
+  const resultText = document.getElementById("resultText");
+  const button = document.getElementById("analyzeBtn");
+
+  if (!fileInput.files.length) {
+    resultText.textContent = "❌ Iltimos, avval X-ray tasvirini yuklang.";
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  // X-rayga o‘xshashligini tekshirish
+  resultText.textContent = "🔍 Rasm tekshirilmoqda...";
+  const isXray = await isLikelyXray(file);
+
+  if (!isXray) {
+    resultText.textContent =
+      "⚠️ Yuklangan rasm X-ray tasviriga o‘xshamaydi. Iltimos, haqiqiy rentgen tasvirini yuklang.";
+    return;
+  }
+
+  // Tugmani o‘chirish
+  button.disabled = true;
+  button.classList.add("opacity-50", "cursor-not-allowed");
+
+  // AI tahlil jarayoni (simulyatsiya)
+  resultText.innerHTML = `
+    <span class="flex items-center gap-2">
+      <span class="animate-spin h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full"></span>
+      Sun’iy intellekt tasvirni tahlil qilmoqda...
+    </span>
+  `;
+
+  const diagnoses = [
+    "O‘pka maydonlarida infiltrativ soyalar aniqlanib, bu pnevmoniyaga xos bo‘lishi mumkin.",
+    "O‘pkaning yuqori qismlarida kavernaga o‘xshash tuzilmalar kuzatilib, bu tuberkulyoz ehtimolini ko‘rsatadi.",
+    "Suyak kortikal qatlamining uzilishi aniqlanib, suyak sinishi ehtimoli mavjud.",
+    "Yurak soyasining kengaygani kardiomegaliya ehtimolini bildiradi.",
+    "Radiografik tasvirda aniq patologik o‘zgarishlar aniqlanmadi."
+  ];
+
+  setTimeout(() => {
+    const randomDiagnosis =
+      diagnoses[Math.floor(Math.random() * diagnoses.length)];
+
+    resultText.textContent =
+      "✅ Natija: " +
+      randomDiagnosis +
+      " ⚠️ Ushbu xulosa faqat yordamchi maqsadga ega bo‘lib, shifokor tashxisini almashtirmaydi.";
+
+    // Tugmani qayta yoqish
+    button.disabled = false;
+    button.classList.remove("opacity-50", "cursor-not-allowed");
+  }, 2500);
+}
 </script>
 
 </body>
