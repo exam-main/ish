@@ -88,10 +88,10 @@
   <!-- XRAY -->
   <section id="xray" class="hidden max-w-2xl mx-auto">
 
-<button onclick="goBack()"
-  class="mb-6 text-sm text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2">
-  ← Umumiy ko‘rinishga qaytish
-</button>
+    <button onclick="goBack()"
+      class="mb-6 text-sm text-cyan-400 hover:text-cyan-300 transition flex items-center gap-2">
+      ← Umumiy ko‘rinishga qaytish
+    </button>
 
     <h2 class="text-3xl font-semibold mb-3">
       Radiografik tasvirni tahlil qilish
@@ -104,25 +104,35 @@
 
     <div class="bg-[#020617] border border-slate-800 rounded-xl p-8">
 
-      <input type="file" accept="image/*"
-        class="block w-full text-sm text-slate-400
-        file:mr-4 file:py-2 file:px-4
-        file:rounded-md file:border-0
-        file:bg-slate-800 file:text-slate-200
-        hover:file:bg-slate-700 mb-6">
+      <!-- ID qo‘shildi -->
+   <input id="imageInput" type="file" accept="image/*"
+  class="block w-full text-sm text-slate-400
+  file:mr-4 file:py-2 file:px-4
+  file:rounded-md file:border-0
+  file:bg-slate-800 file:text-slate-200
+  hover:file:bg-slate-700 mb-6">
 
-      <button
-        class="w-full py-2 rounded-md bg-cyan-500/90 hover:bg-cyan-400
-        text-slate-900 font-medium transition">
-        AI xulosasini yaratish
-      </button>
+<!-- Rasm preview (dizaynni buzmaydi) -->
+<img id="previewImage"
+     class="hidden mb-6 rounded-lg border border-slate-700 max-h-80 mx-auto" />
 
+      <!-- onclick qo‘shildi -->
+    
+<!-- Tugma -->
+<button id="analyzeBtn" onclick="analyzeXray()"
+  class="w-full py-2 rounded-md bg-cyan-500/90 hover:bg-cyan-400
+  text-slate-900 font-medium transition">
+  AI xulosasini yaratish
+</button>
+
+      <!-- Natija uchun ID qo‘shildi -->
       <div class="mt-6 border border-slate-800 rounded-md p-5 bg-[#0b0f1a]">
-        <p class="text-sm text-slate-400 leading-relaxed">
-          Sun’iy intellekt tomonidan shakllantirilgan natijalar shu yerda
-          ko‘rsatiladi. Ushbu xulosa faqat yordamchi maqsadga ega bo‘lib,
-          shifokor tashxisini almashtirmaydi.
-        </p>
+      <!-- Natija -->
+<p id="resultText" class="text-sm text-slate-400 leading-relaxed">
+  Sun’iy intellekt tomonidan shakllantirilgan natijalar shu yerda
+  ko‘rsatiladi. Ushbu xulosa faqat yordamchi maqsadga ega bo‘lib,
+  shifokor tashxisini almashtirmaydi.
+</p>
       </div>
 
       <p class="text-xs text-slate-500 mt-4">
@@ -142,6 +152,126 @@ function openXray() {
 function goBack() {
   document.getElementById("xray").classList.add("hidden");
   document.getElementById("home").classList.remove("hidden");
+}
+
+const diagnoses = [
+  {
+    title: "O‘pka pnevmoniyasi ehtimoli",
+    probability: "87%",
+    findings: [
+      "Segmentar infiltrativ soyalar",
+      "O‘pka zichligining oshishi",
+      "Yallig‘lanish belgilari"
+    ],
+    description:
+      "Radiografik tasvir pnevmoniyaga xos infiltrativ o‘zgarishlarni ko‘rsatadi. Klinik tekshiruv bilan tasdiqlash tavsiya etiladi."
+  },
+  {
+    title: "Tuberkulyoz ehtimoli",
+    probability: "81%",
+    findings: [
+      "Yuqori bo‘limlarda kavernalar",
+      "Fibrotik o‘zgarishlar",
+      "Tugunli zichlashuvlar"
+    ],
+    description:
+      "O‘pkaning yuqori qismlarida aniqlangan o‘zgarishlar tuberkulyoz kasalligiga mos kelishi mumkin."
+  },
+  {
+    title: "Suyak sinishi",
+    probability: "92%",
+    findings: [
+      "Kortikal qatlam uzilishi",
+      "Suyak kontinuitetining buzilishi"
+    ],
+    description:
+      "Tekshirilgan hududda suyak sinishiga xos belgilar aniqlangan."
+  },
+  {
+    title: "Kardiomegaliya",
+    probability: "76%",
+    findings: [
+      "Kardiotorakal indeksning oshishi",
+      "Yurak soyasining kengayishi"
+    ],
+    description:
+      "Yurak hajmining kattalashuvi kuzatiladi, bu kardiomegaliyani ko‘rsatishi mumkin."
+  },
+  {
+    title: "Normal holat",
+    probability: "95%",
+    findings: [
+      "O‘pka maydonlari toza",
+      "Yurak hajmi me’yorida",
+      "Patologik o‘zgarishlar aniqlanmadi"
+    ],
+    description:
+      "Radiografik tasvirda sezilarli patologik o‘zgarishlar aniqlanmadi."
+  }
+];
+
+// Rasmni preview qilish
+document.getElementById("imageInput").addEventListener("change", function () {
+  const file = this.files[0];
+  const preview = document.getElementById("previewImage");
+  const resultText = document.getElementById("resultText");
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    resultText.textContent = "Iltimos, faqat rasm faylini yuklang.";
+    this.value = "";
+    return;
+  }
+
+  preview.src = URL.createObjectURL(file);
+  preview.classList.remove("hidden");
+  resultText.textContent = "Rasm yuklandi. Tahlil qilish uchun tugmani bosing.";
+});
+
+// AI simulyatsiyasi
+function analyzeXray() {
+  const fileInput = document.getElementById("imageInput");
+  const resultText = document.getElementById("resultText");
+  const button = document.getElementById("analyzeBtn");
+
+  if (!fileInput.files.length) {
+    resultText.textContent = "Iltimos, avval X-ray tasvirini yuklang.";
+    return;
+  }
+
+  // Tugmani vaqtincha o‘chirish
+  button.disabled = true;
+  button.classList.add("opacity-50", "cursor-not-allowed");
+
+  // Yuklanish animatsiyasi
+  resultText.innerHTML = `
+    <div class="flex items-center gap-2">
+      <div class="animate-spin h-4 w-4 border-2 border-cyan-400 border-t-transparent rounded-full"></div>
+      Sun’iy intellekt tasvirni tahlil qilmoqda...
+    </div>
+  `;
+
+  setTimeout(() => {
+    const diagnosis = diagnoses[Math.floor(Math.random() * diagnoses.length)];
+
+    resultText.innerHTML = `
+      <strong class="text-cyan-400 text-lg">${diagnosis.title}</strong>
+      <p class="mt-2"><strong>Ehtimollik:</strong> ${diagnosis.probability}</p>
+      <p class="mt-2"><strong>Radiologik belgilar:</strong></p>
+      <ul class="list-disc list-inside mt-1">
+        ${diagnosis.findings.map(item => `<li>${item}</li>`).join("")}
+      </ul>
+      <p class="mt-2">${diagnosis.description}</p>
+      <p class="mt-3 text-xs text-slate-500">
+        ⚠️ Ushbu xulosa faqat yordamchi maqsadga ega bo‘lib, shifokor tashxisini almashtirmaydi.
+      </p>
+    `;
+
+    // Tugmani qayta faollashtirish
+    button.disabled = false;
+    button.classList.remove("opacity-50", "cursor-not-allowed");
+  }, 2500);
 }
 </script>
 
